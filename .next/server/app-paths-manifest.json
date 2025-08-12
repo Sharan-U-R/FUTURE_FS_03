@@ -1,13 +1,5 @@
 {
-  "/not-found": "app/not-found.js",
-  "/store/page": "app/store/page.js",
-  "/ipad/page": "app/ipad/page.js",
-  "/mac/page": "app/mac/page.js",
-  "/airpods/page": "app/airpods/page.js",
-  "/tv/page": "app/tv/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/iphone/page": "app/iphone/page.js",
-  "/support/page": "app/support/page.js",
   "/page": "app/page.js",
-  "/bag/page": "app/bag/page.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/login/page": "app/login/page.js"
 }

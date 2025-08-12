@@ -30,11 +30,10 @@ export default function Header() {
       const pathname = window.location.pathname
       const darkPages = ['/', '/iphone', '/mac', '/ipad', '/watch', '/airpods', '/tv']
       
-      // Only show dark navbar on specific pages with dark heroes and when not scrolled much
+      // Show dark navbar on dark pages regardless of scroll position
       const isDarkPage = darkPages.includes(pathname)
-      const isNearTop = window.scrollY < 50
       
-      setIsDarkBackground(isDarkPage && isNearTop)
+      setIsDarkBackground(isDarkPage)
     }
     
     const handleScrollAndBackground = () => {

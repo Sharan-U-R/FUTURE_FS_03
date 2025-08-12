@@ -95,7 +95,7 @@ export default function Header() {
       <div className="max-w-none mx-auto px-6">
         <div className="flex items-center justify-center h-16">
           {/* Logo */}
-          <Link href="/" className="absolute left-6">
+          <Link href="/" className="absolute left-1 sm:left-6">
             <motion.div 
               className="cursor-pointer flex items-center justify-center p-2 hover:bg-gray-50/30 rounded-lg transition-all duration-200"
               whileHover={{ scale: 1.05 }}
@@ -134,7 +134,7 @@ export default function Header() {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="absolute right-6 flex items-center space-x-5">
+          <div className="absolute right-1 sm:right-6 flex items-center space-x-2 sm:space-x-5">
             <motion.button 
               onClick={() => setIsSearchOpen(true)}
               className={`p-2 rounded-full transition-colors duration-200 ${
@@ -207,7 +207,11 @@ export default function Header() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
-              className="lg:hidden bg-white/95 backdrop-blur-xl border-t border-gray-200/50 py-4 shadow-lg"
+              className={`lg:hidden backdrop-blur-xl py-4 shadow-lg ${
+                isDarkBackground && !isScrolled
+                  ? 'bg-black/90 border-t border-white/10'
+                  : 'bg-white/95 border-t border-gray-200/50'
+              }`}
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
@@ -224,7 +228,11 @@ export default function Header() {
                     <Link 
                       href={item.href}
                       prefetch={true}
-                      className="block text-base font-medium text-gray-900 hover:text-apple-blue hover:bg-gray-50 py-4 px-4 rounded-lg transition-all duration-200"
+                      className={`block text-base font-medium py-4 px-4 rounded-lg transition-all duration-200 ${
+                        isDarkBackground && !isScrolled
+                          ? 'text-white/90 hover:text-white hover:bg-white/10'
+                          : 'text-gray-900 hover:text-apple-blue hover:bg-gray-50'
+                      }`}
                       onClick={() => setIsMenuOpen(false)}
                       onMouseEnter={() => router.prefetch(item.href)}
                     >
@@ -235,20 +243,32 @@ export default function Header() {
               </nav>
               
               {/* Mobile Actions */}
-              <div className="mt-4 pt-4 border-t border-gray-200">
+              <div className={`mt-4 pt-4 ${
+                isDarkBackground && !isScrolled
+                  ? 'border-t border-white/20'
+                  : 'border-t border-gray-200'
+              }`}>
                 <button
                   onClick={() => {
                     setIsSearchOpen(true)
                     setIsMenuOpen(false)
                   }}
-                  className="flex items-center w-full p-3 text-gray-900 hover:text-apple-blue hover:bg-gray-50 rounded-lg transition-colors font-medium"
+                  className={`flex items-center w-full p-3 rounded-lg transition-colors font-medium ${
+                    isDarkBackground && !isScrolled
+                      ? 'text-white/90 hover:text-white hover:bg-white/10'
+                      : 'text-gray-900 hover:text-apple-blue hover:bg-gray-50'
+                  }`}
                 >
                   <Search className="w-5 h-5 mr-3" />
                   Search products...
                 </button>
                 
                 {isLoggedIn ? (
-                  <div className="mt-2 p-3 bg-apple-lightgray rounded-lg">
+                  <div className={`mt-2 p-3 rounded-lg ${
+                    isDarkBackground && !isScrolled
+                      ? 'bg-white/10'
+                      : 'bg-apple-lightgray'
+                  }`}>
                     <div className="flex items-center gap-3 mb-3">
                       <img
                         src={`https://ui-avatars.com/api/?name=${encodeURIComponent('User')}&background=007AFF&color=fff`}
@@ -256,15 +276,23 @@ export default function Header() {
                         className="w-10 h-10 rounded-full object-cover"
                       />
                       <div>
-                        <p className="font-semibold text-gray-900">Welcome back!</p>
-                        <p className="text-sm text-gray-600">Signed in</p>
+                        <p className={`font-semibold ${
+                          isDarkBackground && !isScrolled ? 'text-white' : 'text-gray-900'
+                        }`}>Welcome back!</p>
+                        <p className={`text-sm ${
+                          isDarkBackground && !isScrolled ? 'text-white/70' : 'text-gray-600'
+                        }`}>Signed in</p>
                       </div>
                     </div>
                     <div className="space-y-1">
                       <Link
                         href="/profile"
                         onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center w-full p-2 text-gray-800 hover:text-apple-blue hover:bg-white rounded-lg transition-colors text-sm font-medium"
+                        className={`flex items-center w-full p-2 rounded-lg transition-colors text-sm font-medium ${
+                          isDarkBackground && !isScrolled
+                            ? 'text-white/90 hover:text-white hover:bg-white/10'
+                            : 'text-gray-800 hover:text-apple-blue hover:bg-white'
+                        }`}
                       >
                         <User className="w-4 h-4 mr-3" />
                         Profile
@@ -272,7 +300,11 @@ export default function Header() {
                       <Link
                         href="/orders"
                         onClick={() => setIsMenuOpen(false)}
-                        className="flex items-center w-full p-2 text-gray-800 hover:text-apple-blue hover:bg-white rounded-lg transition-colors text-sm font-medium"
+                        className={`flex items-center w-full p-2 rounded-lg transition-colors text-sm font-medium ${
+                          isDarkBackground && !isScrolled
+                            ? 'text-white/90 hover:text-white hover:bg-white/10'
+                            : 'text-gray-800 hover:text-apple-blue hover:bg-white'
+                        }`}
                       >
                         <ShoppingBag className="w-4 h-4 mr-3" />
                         Orders
@@ -283,7 +315,11 @@ export default function Header() {
                   <Link
                     href="/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center w-full p-3 text-gray-900 hover:text-apple-blue hover:bg-gray-50 rounded-lg transition-colors mt-2 font-medium"
+                    className={`flex items-center w-full p-3 rounded-lg transition-colors mt-2 font-medium ${
+                      isDarkBackground && !isScrolled
+                        ? 'text-white/90 hover:text-white hover:bg-white/10'
+                        : 'text-gray-900 hover:text-apple-blue hover:bg-gray-50'
+                    }`}
                   >
                     <User className="w-5 h-5 mr-3" />
                     Sign In

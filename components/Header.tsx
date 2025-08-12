@@ -23,19 +23,28 @@ export default function Header() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0)
-      
-      // Check if we're on a page with dark background (like homepage hero)
-      const heroSection = document.querySelector('section')
-      if (heroSection) {
-        const styles = window.getComputedStyle(heroSection)
-        const bgColor = styles.backgroundColor
-        setIsDarkBackground(bgColor === 'rgb(0, 0, 0)' || bgColor.includes('black') || window.scrollY < 100)
-      }
     }
     
-    handleScroll() // Check initial state
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const detectBackground = () => {
+      // Check current pathname to determine if page has dark hero
+      const pathname = window.location.pathname
+      const darkPages = ['/', '/iphone', '/mac', '/ipad', '/watch', '/airpods', '/tv']
+      
+      // Only show dark navbar on specific pages with dark heroes and when not scrolled much
+      const isDarkPage = darkPages.includes(pathname)
+      const isNearTop = window.scrollY < 50
+      
+      setIsDarkBackground(isDarkPage && isNearTop)
+    }
+    
+    const handleScrollAndBackground = () => {
+      handleScroll()
+      detectBackground()
+    }
+    
+    handleScrollAndBackground() // Check initial state
+    window.addEventListener('scroll', handleScrollAndBackground)
+    return () => window.removeEventListener('scroll', handleScrollAndBackground)
   }, [])
 
   // Aggressive preloading for instant navigation
@@ -86,10 +95,12 @@ export default function Header() {
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-sm' 
-        : isDarkBackground && !isScrolled
-          ? 'bg-black/20 backdrop-blur-xl border-b border-white/10'
+      isDarkBackground
+        ? isScrolled
+          ? 'bg-black/95 backdrop-blur-xl border-b border-white/20 shadow-sm'
+          : 'bg-black/20 backdrop-blur-xl border-b border-white/10'
+        : isScrolled
+          ? 'bg-white/95 backdrop-blur-xl border-b border-gray-200/50 shadow-sm'
           : 'bg-white/80 backdrop-blur-xl border-b border-gray-100/30'
     }`}>
       <div className="max-w-none mx-auto px-6">
@@ -121,7 +132,7 @@ export default function Header() {
                 href={item.href}
                 prefetch={true}
                 className={`text-sm font-medium transition-colors duration-200 py-3 px-3 relative group ${
-                  isDarkBackground && !isScrolled 
+                  isDarkBackground
                     ? 'text-white/90 hover:text-white' 
                     : 'text-gray-800 hover:text-black'
                 }`}
@@ -138,7 +149,7 @@ export default function Header() {
             <motion.button 
               onClick={() => setIsSearchOpen(true)}
               className={`p-2 rounded-full transition-colors duration-200 ${
-                isDarkBackground && !isScrolled 
+                isDarkBackground
                   ? 'hover:bg-white/10' 
                   : 'hover:bg-gray-100'
               }`}
@@ -146,7 +157,7 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
             >
               <Search className={`w-5 h-5 ${
-                isDarkBackground && !isScrolled ? 'text-white/90' : 'text-gray-800'
+                isDarkBackground ? 'text-white/90' : 'text-gray-800'
               }`} />
             </motion.button>
             
@@ -160,7 +171,7 @@ export default function Header() {
             <Link href="/bag">
               <motion.div
                 className={`p-2 rounded-full transition-colors duration-200 relative ${
-                  isDarkBackground && !isScrolled 
+                  isDarkBackground
                     ? 'hover:bg-white/10' 
                     : 'hover:bg-gray-100'
                 }`}
@@ -168,7 +179,7 @@ export default function Header() {
                 whileTap={{ scale: 0.95 }}
               >
                 <ShoppingBag className={`w-5 h-5 ${
-                  isDarkBackground && !isScrolled ? 'text-white/90' : 'text-gray-800'
+                  isDarkBackground ? 'text-white/90' : 'text-gray-800'
                 }`} />
                 {totalItems > 0 && (
                   <motion.span 
@@ -185,7 +196,7 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <motion.button
               className={`lg:hidden p-2 rounded-full transition-colors duration-200 ${
-                isDarkBackground && !isScrolled 
+                isDarkBackground
                   ? 'hover:bg-white/10' 
                   : 'hover:bg-gray-100'
               }`}
@@ -194,8 +205,8 @@ export default function Header() {
               whileTap={{ scale: 0.95 }}
             >
               {isMenuOpen ? 
-                <X className={`w-5 h-5 ${isDarkBackground && !isScrolled ? 'text-white/90' : 'text-gray-800'}`} /> : 
-                <Menu className={`w-5 h-5 ${isDarkBackground && !isScrolled ? 'text-white/90' : 'text-gray-800'}`} />
+                <X className={`w-5 h-5 ${isDarkBackground ? 'text-white/90' : 'text-gray-800'}`} /> : 
+                <Menu className={`w-5 h-5 ${isDarkBackground ? 'text-white/90' : 'text-gray-800'}`} />
               }
             </motion.button>
           </div>
@@ -208,7 +219,7 @@ export default function Header() {
           {isMenuOpen && (
             <motion.div 
               className={`lg:hidden backdrop-blur-xl py-4 shadow-lg ${
-                isDarkBackground && !isScrolled
+                isDarkBackground
                   ? 'bg-black/90 border-t border-white/10'
                   : 'bg-white/95 border-t border-gray-200/50'
               }`}
@@ -229,7 +240,7 @@ export default function Header() {
                       href={item.href}
                       prefetch={true}
                       className={`block text-base font-medium py-4 px-4 rounded-lg transition-all duration-200 ${
-                        isDarkBackground && !isScrolled
+                        isDarkBackground
                           ? 'text-white/90 hover:text-white hover:bg-white/10'
                           : 'text-gray-900 hover:text-apple-blue hover:bg-gray-50'
                       }`}
@@ -244,7 +255,7 @@ export default function Header() {
               
               {/* Mobile Actions */}
               <div className={`mt-4 pt-4 ${
-                isDarkBackground && !isScrolled
+                isDarkBackground
                   ? 'border-t border-white/20'
                   : 'border-t border-gray-200'
               }`}>
@@ -254,7 +265,7 @@ export default function Header() {
                     setIsMenuOpen(false)
                   }}
                   className={`flex items-center w-full p-3 rounded-lg transition-colors font-medium ${
-                    isDarkBackground && !isScrolled
+                    isDarkBackground
                       ? 'text-white/90 hover:text-white hover:bg-white/10'
                       : 'text-gray-900 hover:text-apple-blue hover:bg-gray-50'
                   }`}
@@ -265,7 +276,7 @@ export default function Header() {
                 
                 {isLoggedIn ? (
                   <div className={`mt-2 p-3 rounded-lg ${
-                    isDarkBackground && !isScrolled
+                    isDarkBackground
                       ? 'bg-white/10'
                       : 'bg-apple-lightgray'
                   }`}>
@@ -277,10 +288,10 @@ export default function Header() {
                       />
                       <div>
                         <p className={`font-semibold ${
-                          isDarkBackground && !isScrolled ? 'text-white' : 'text-gray-900'
+                          isDarkBackground ? 'text-white' : 'text-gray-900'
                         }`}>Welcome back!</p>
                         <p className={`text-sm ${
-                          isDarkBackground && !isScrolled ? 'text-white/70' : 'text-gray-600'
+                          isDarkBackground ? 'text-white/70' : 'text-gray-600'
                         }`}>Signed in</p>
                       </div>
                     </div>
@@ -289,7 +300,7 @@ export default function Header() {
                         href="/profile"
                         onClick={() => setIsMenuOpen(false)}
                         className={`flex items-center w-full p-2 rounded-lg transition-colors text-sm font-medium ${
-                          isDarkBackground && !isScrolled
+                          isDarkBackground
                             ? 'text-white/90 hover:text-white hover:bg-white/10'
                             : 'text-gray-800 hover:text-apple-blue hover:bg-white'
                         }`}
@@ -301,7 +312,7 @@ export default function Header() {
                         href="/orders"
                         onClick={() => setIsMenuOpen(false)}
                         className={`flex items-center w-full p-2 rounded-lg transition-colors text-sm font-medium ${
-                          isDarkBackground && !isScrolled
+                          isDarkBackground
                             ? 'text-white/90 hover:text-white hover:bg-white/10'
                             : 'text-gray-800 hover:text-apple-blue hover:bg-white'
                         }`}
@@ -316,7 +327,7 @@ export default function Header() {
                     href="/login"
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center w-full p-3 rounded-lg transition-colors mt-2 font-medium ${
-                      isDarkBackground && !isScrolled
+                      isDarkBackground
                         ? 'text-white/90 hover:text-white hover:bg-white/10'
                         : 'text-gray-900 hover:text-apple-blue hover:bg-gray-50'
                     }`}

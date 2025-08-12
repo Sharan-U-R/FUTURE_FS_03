@@ -111,55 +111,43 @@ export default function ShoppingBagComponent() {
           <p className="text-gray-600">Free delivery and free returns.</p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-3 gap-8">
           {/* Cart Items */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6">
             {items.map((item, index) => (
               <motion.div
                 key={item.id}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-2xl p-6 shadow-lg"
+                className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg"
               >
-                <div className="flex gap-6">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-32 h-32 object-cover rounded-xl"
-                  />
-                  
-                  <div className="flex-1">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="text-xl font-semibold text-black">{item.name}</h3>
-                      <button
-                        onClick={() => removeItem(item.id)}
-                        className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                      >
-                        <X className="w-5 h-5 text-gray-500" />
-                      </button>
+                <div className="space-y-4">
+                  {/* Header with title and remove button */}
+                  <div className="flex justify-between items-start gap-2">
+                    <h3 className="text-lg sm:text-xl font-semibold text-black flex-1 min-w-0 truncate">{item.name}</h3>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+                    >
+                      <X className="w-5 h-5 text-gray-500" />
+                    </button>
+                  </div>
+
+                  {/* Image and details section */}
+                  <div className="flex gap-4 overflow-hidden">
+                    <div className="flex-shrink-0">
+                      <img
+                        src={item.image}
+                        alt={item.name}
+                        className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl"
+                      />
                     </div>
                     
-                    <div className="space-y-1 mb-4">
-                      <p className="text-gray-600">{item.color}</p>
-                      {item.storage && <p className="text-gray-600">{item.storage}</p>}
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:border-gray-400 transition-colors"
-                        >
-                          <Minus className="w-4 h-4" />
-                        </button>
-                        <span className="font-medium text-black w-8 text-center">{item.quantity}</span>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:border-gray-400 transition-colors"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div className="space-y-1">
+                        <p className="text-gray-600 text-sm truncate">{item.color}</p>
+                        {item.storage && <p className="text-gray-600 text-sm truncate">{item.storage}</p>}
                       </div>
                       
                       <div className="text-right">
@@ -169,16 +157,39 @@ export default function ShoppingBagComponent() {
                         <p className="text-xl font-semibold text-black">${item.price}</p>
                       </div>
                     </div>
-                    
-                    <div className="flex gap-4 mt-4">
-                      <button className="flex items-center gap-2 text-apple-blue hover:underline text-sm">
-                        <Heart className="w-4 h-4" />
-                        Save for later
+                  </div>
+
+                  {/* Quantity controls and total price */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:border-gray-400 transition-colors flex-shrink-0"
+                      >
+                        <Minus className="w-4 h-4" />
                       </button>
-                      <button className="text-apple-blue hover:underline text-sm">
-                        Find in store
+                      <span className="font-medium text-black w-8 text-center">{item.quantity}</span>
+                      <button
+                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center hover:border-gray-400 transition-colors flex-shrink-0"
+                      >
+                        <Plus className="w-4 h-4" />
                       </button>
                     </div>
+                    <div className="text-right">
+                      <p className="text-lg font-semibold text-black">${(item.price * item.quantity).toFixed(2)}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Action buttons */}
+                  <div className="flex flex-wrap gap-2 sm:gap-4 pt-2 border-t border-gray-100">
+                    <button className="flex items-center gap-2 text-apple-blue hover:underline text-sm whitespace-nowrap">
+                      <Heart className="w-4 h-4 flex-shrink-0" />
+                      <span className="truncate">Save for later</span>
+                    </button>
+                    <button className="text-apple-blue hover:underline text-sm whitespace-nowrap">
+                      Find in store
+                    </button>
                   </div>
                 </div>
               </motion.div>
@@ -190,7 +201,7 @@ export default function ShoppingBagComponent() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white rounded-2xl p-6 shadow-lg h-fit sticky top-24"
+            className="bg-white rounded-2xl p-4 sm:p-6 shadow-lg h-fit lg:sticky lg:top-24"
           >
             <h2 className="text-xl font-semibold text-black mb-6">Order Summary</h2>
             
